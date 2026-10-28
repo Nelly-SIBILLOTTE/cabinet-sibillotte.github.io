@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outils de chiffrage Sibillotte</title>
+<meta name="description" content="Outils gratuits pour les avocats : premier chiffrage des pertes de gains professionnels et de la perte d'exploitation. Cabinet Nelly Sibillotte, expert-comptable à Fréjus.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;
+  --bg:#f6f4ef; --card:#ffffff; --ink:#1d2433; --muted:#5b6475; --line:#e2ddd2;
+  --brand:#1f3a5f; --brand-soft:#e8eef6; --accent:#b8873b; --ok:#2f6b4f; --err:#a33a2b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--brand)}
+header{background:var(--brand);color:#fff;padding:28px 16px 34px}
+.wrap{max-width:860px;margin:0 auto}
+.brand{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+h1{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(1.6rem,4.5vw,2.3rem);line-height:1.2;margin:.35em 0 .3em}
+header p{margin:0;max-width:640px;opacity:.92}
+header a{color:#fff}
+main{padding:0 16px 48px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:-18px 0 18px}
+.tab{flex:1 1 180px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:12px 14px;font:inherit;font-weight:600;cursor:pointer;text-align:left}
+label input[type=checkbox]{margin-right:6px;vertical-align:-2px}
+.tab small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.tab[aria-selected="true"]{border-color:var(--brand);box-shadow:inset 0 -3px 0 var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 18px;margin-bottom:18px}
+.card h2{font-family:"Source Serif 4",Georgia,serif;font-size:1.35rem;margin:0 0 .3em}
+.lead{color:var(--muted);margin:0 0 1em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{display:block;font-weight:500;font-size:.92rem;margin-bottom:4px}
+label .hint{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+.btn{display:inline-block;border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer;background:var(--brand);color:#fff}
+.btn.alt{background:var(--accent)}
+.btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--brand)}
+.actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.result{margin-top:18px;border-left:4px solid var(--accent);background:var(--brand-soft);border-radius:8px;padding:14px 16px;display:none}
+.result.show{display:block}
+.result table{width:100%;border-collapse:collapse;font-size:.95rem}
+.result td{padding:5px 0;border-bottom:1px dashed #c9d3e2}
+.result td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.result tr.total td{font-weight:700;border-bottom:0;padding-top:9px;font-size:1.05rem}
+.result .cta{margin-top:12px}
+.note{font-size:.82rem;color:var(--muted);margin-top:10px}
+.err{color:var(--err);font-size:.9rem;margin-top:8px}
+.check li{margin:.35em 0}
+.check h3{font-size:1rem;margin:1.1em 0 .3em;color:var(--brand)}
+#contact{scroll-margin-top:16px}
+.coords{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:20px}
+.coord{border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.coord .k{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.coord .v{font-weight:600;overflow-wrap:anywhere;user-select:all}
+header .tel{display:inline-block;margin-top:10px;color:#fff;font-weight:600}
+.ok{color:var(--ok);font-weight:600}
+footer{padding:22px 16px 40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+.hidden{display:none}
+@media print{header,.tabs,.actions,#contact,footer,.grid,.pc-corp,.pc-mat,.lead,main>.note{display:none!important}.panel.hidden{display:none!important}.card{border:0}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">Cabinet Nelly Sibillotte · Expert-comptable · Fréjus</div>
+    <h1>Outils gratuits de premier chiffrage du préjudice économique</h1>
+    <p>Pour les avocats et les professionnels de l'indemnisation : une première estimation en quelques minutes, puis un chiffrage détaillé par le cabinet si vous le souhaitez. <a href="https://www.nelly-sibillotte.fr" target="_blank" rel="noopener">Retour au site du cabinet</a></p>
+    <a class="tel" href="tel:+33683070535">06 83 07 05 35</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-panel="pga">Pertes de gains actuels<small>Accident → consolidation</small></button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="pgf">Pertes de gains futurs<small>Après consolidation</small></button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="pe">Perte d'exploitation<small>Entreprises, sinistres</small></button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="pieces">Pièces à réunir<small>Liste à télécharger</small></button>
+  </div>
+
+  <!-- PGPA -->
+  <section class="card panel" id="pga">
+    <h2>Pertes de gains professionnels actuels</h2>
+    <p class="lead">Perte de revenus de la victime entre l'accident et la date de consolidation.</p>
+    <div class="grid">
+      <div><label>Revenu net annuel avant l'accident (€)<span class="hint">Moyenne des dernières années si les revenus varient</span></label><input type="number" id="pga_ref" min="0" step="100" inputmode="decimal"></div>
+      <div><label>Date de l'accident</label><input type="date" id="pga_d1"></div>
+      <div><label>Date de consolidation</label><input type="date" id="pga_d2"></div>
+      <div><label>Revenus perçus sur la période (€)<span class="hint">Salaires maintenus, revenus d'activité</span></label><input type="number" id="pga_recu" min="0" step="100" value="0" inputmode="decimal"></div>
+      <div><label>Indemnités journalières versées (€)<span class="hint">Sécurité sociale, prévoyance</span></label><input type="number" id="pga_ij" min="0" step="100" value="0" inputmode="decimal"></div>
+    </div>
+    <div class="actions"><button class="btn" data-calc="pga">Calculer</button></div>
+    <div class="err hidden" id="pga_err"></div>
+    <div class="result" id="pga_res"></div>
+  </section>
+
+  <!-- PGPF -->
+  <section class="card panel hidden" id="pgf">
+    <h2>Pertes de gains professionnels futurs</h2>
+    <p class="lead">Perte annuelle de revenus après consolidation, échue jusqu'à la date de calcul puis capitalisée pour l'avenir.</p>
+    <div class="grid">
+      <div><label>Revenu net annuel avant l'accident (€)</label><input type="number" id="pgf_ref" min="0" step="100" inputmode="decimal"></div>
+      <div><label>Revenu net annuel après consolidation (€)<span class="hint">0 en cas d'inaptitude totale</span></label><input type="number" id="pgf_apres" min="0" step="100" value="0" inputmode="decimal"></div>
+      <div><label>Date de consolidation</label><input type="date" id="pgf_d1"></div>
+      <div><label>Date du calcul (liquidation)</label><input type="date" id="pgf_d2"></div>
+      <div><label>Âge de la victime à la date du calcul</label><input type="number" id="pgf_age" min="0" max="110" step="1" inputmode="numeric"></div>
+      <div><label>Sexe</label><select id="pgf_sexe"><option value="F">Femme</option><option value="H">Homme</option></select></div>
+      <div><label>Type de rente</label><select id="pgf_type"><option value="tempo">Temporaire, jusqu'à la retraite</option><option value="viager">Viagère</option></select></div>
+      <div><label>Coefficient de capitalisation<span class="hint" id="pgf_hint">Saisissez le coefficient du barème de votre choix</span></label><input type="number" id="pgf_coef" min="0" step="0.001" inputmode="decimal"></div>
+    </div>
+    <div class="actions"><button class="btn" data-calc="pgf">Calculer</button></div>
+    <div class="err hidden" id="pgf_err"></div>
+    <div class="result" id="pgf_res"></div>
+  </section>
+
+  <!-- PE -->
+  <section class="card panel hidden" id="pe">
+    <h2>Perte d'exploitation</h2>
+    <p class="lead">Estimation de la perte de marge d'une entreprise pendant la période d'interruption ou de baisse d'activité.</p>
+    <div class="grid">
+      <div><label>Chiffre d'affaires annuel habituel (€ HT)</label><input type="number" id="pe_ca" min="0" step="1000" inputmode="decimal"></div>
+      <div><label>Taux de marge sur coûts variables (%)<span class="hint">CA moins achats et charges variables, rapporté au CA</span></label><input type="number" id="pe_taux" min="0" max="100" step="0.1" inputmode="decimal"></div>
+      <div><label>Durée de la période (mois)</label><input type="number" id="pe_duree" min="0" step="0.5" inputmode="decimal"></div>
+      <div><label>Baisse d'activité sur la période (%)<span class="hint">100 % si arrêt total</span></label><input type="number" id="pe_baisse" min="0" max="100" step="1" value="100" inputmode="decimal"></div>
+      <div><label>Frais supplémentaires engagés (€)<span class="hint">Location de matériel, sous-traitance…</span></label><input type="number" id="pe_frais" min="0" step="100" value="0" inputmode="decimal"></div>
+      <div><label>Charges économisées (€)<span class="hint">Charges fixes non supportées pendant l'arrêt</span></label><input type="number" id="pe_eco" min="0" step="100" value="0" inputmode="decimal"></div>
+    </div>
+    <div class="actions"><button class="btn" data-calc="pe">Calculer</button></div>
+    <div class="err hidden" id="pe_err"></div>
+    <div class="result" id="pe_res"></div>
+  </section>
+
+  <!-- Pièces -->
+  <section class="card panel hidden check" id="pieces">
+    <h2>Pièces à réunir pour un chiffrage</h2>
+    <p class="lead">Répondez à quelques questions : la liste s'adapte à votre dossier.</p>
+    <div class="grid">
+      <div><label>Type de dossier</label><select id="pc_type">
+        <option value="corporel">Préjudice corporel</option>
+        <option value="exploitation">Perte d'exploitation</option>
+        <option value="materiel">Pertes matérielles</option></select></div>
+      <div class="pc-corp"><label>Situation de la victime avant l'accident</label><select id="pc_statut">
+        <option value="salarie">Salarié du secteur privé</option>
+        <option value="fonctionnaire">Fonctionnaire ou agent public</option>
+        <option value="independant">Travailleur indépendant ou dirigeant</option>
+        <option value="sans">Sans emploi, étudiant ou en formation</option>
+        <option value="retraite">Retraité</option></select></div>
+    </div>
+    <div class="pc-corp" style="margin-top:12px">
+      <label><input type="checkbox" id="pc_inapt" style="width:auto"> Inaptitude, licenciement ou reclassement après l'accident</label>
+      <label><input type="checkbox" id="pc_conso" style="width:auto"> La victime est consolidée (rapport d'expertise définitif)</label>
+      <label><input type="checkbox" id="pc_deces" style="width:auto"> Victime décédée : préjudice économique des proches</label>
+    </div>
+    <div class="pc-mat hidden" style="margin-top:12px">
+      <label><input type="checkbox" id="pc_stock" style="width:auto"> Stocks ou marchandises endommagés</label>
+    </div>
+    <div id="pc_list" style="margin-top:8px"></div>
+    <div class="actions"><button class="btn ghost" type="button" id="pc_copy">Copier la liste</button><a class="btn alt" href="#contact">Confier un dossier au cabinet</a></div>
+    <p class="ok hidden" id="pc_ok">Liste copiée.</p>
+  </section>
+
+  <!-- Contact -->
+  <section class="card" id="contact">
+    <h2>Recevoir un chiffrage détaillé du cabinet</h2>
+    <p class="lead">Fort de 20 ans d'expertise comptable et de 13 ans d'expertise judiciaire, le cabinet intervient dans toute la France, DOM compris, pour le chiffrage du préjudice corporel, de la perte d'exploitation et des pertes matérielles.</p>
+    <div class="grid">
+        <div><label for="ct_nom">Votre nom et votre cabinet</label><input id="ct_nom" autocomplete="name"></div>
+        <div><label for="ct_tel">Votre téléphone (facultatif)</label><input id="ct_tel" type="tel" autocomplete="tel"></div>
+      </div>
+      <div style="margin-top:14px"><label for="ct_obj">Objet de votre demande<span class="hint">Merci de ne pas indiquer le nom de la victime ni d'informations médicales : les pièces s'échangent ensuite directement avec le cabinet.</span></label><textarea id="ct_obj" rows="3"></textarea></div>
+      <p class="note" id="calcul_note"></p>
+      <div class="actions"><button class="btn alt" type="button" id="ct_build">Préparer mon message</button></div>
+      <div id="ct_out" class="hidden">
+        <div style="margin-top:16px"><label for="ct_msg">Votre message, prêt à envoyer</label><textarea id="ct_msg" rows="8"></textarea></div>
+        <div class="actions"><button class="btn" type="button" id="ct_copy">Copier le message</button><a class="btn ghost" id="ct_mail" href="#">Ouvrir ma messagerie</a></div>
+        <p class="ok hidden" id="ct_ok">Message copié : collez-le dans un email à l'adresse ci-dessous.</p>
+      </div>
+      <div class="coords">
+        <div class="coord"><div class="k">Email</div><div class="v">nellysibillotte@gmail.com</div></div>
+        <div class="coord"><div class="k">Téléphone</div><div class="v">06 83 07 05 35</div></div>
+        <div class="coord"><div class="k">Adresse</div><div class="v">43 rue Veilex, 83600 Fréjus</div></div>
+      </div>
+  </section>
+
+  <p class="note">Les résultats sont des estimations indicatives fondées sur les données saisies. Ils ne remplacent pas un chiffrage établi par un expert-comptable au vu des pièces du dossier.</p>
+</main>
+
+<footer><div class="wrap">Cabinet Nelly Sibillotte, expert-comptable · Fréjus (Var) · <a href="https://www.nelly-sibillotte.fr" target="_blank" rel="noopener">www.nelly-sibillotte.fr</a></div></footer>
+
+<script>
+const fmt = n => n.toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+const num = id => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? null : v; };
+const date = id => { const v = document.getElementById(id).value; return v ? new Date(v+'T00:00:00') : null; };
+const years = (a,b) => (b - a) / 86400000 / 365.25;
+let lastCalc = '';
+
+/* Barème : à compléter avec les coefficients fournis par le cabinet.
+   Format : BAREME.tempo.F[age] = coefficient ; BAREME.viager.H[age] = coefficient */
+const CABINET_EMAIL = 'nellysibillotte@gmail.com';
+const BAREME = null; const BAREME_NOM = '';
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x===t));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('hidden', p.id !== t.dataset.panel));
+}));
+
+function fail(k, msg){ const e=document.getElementById(k+'_err'); e.textContent=msg; e.classList.remove('hidden'); document.getElementById(k+'_res').classList.remove('show'); }
+function show(k, rows, total, summary){
+  document.getElementById(k+'_err').classList.add('hidden');
+  const r = document.getElementById(k+'_res');
+  r.innerHTML = '<table>' + rows.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('') +
+    `<tr class="total"><td>${total[0]}</td><td>${total[1]}</td></tr></table>` +
+    '<div class="cta"><a class="btn alt" href="#contact">Recevoir un chiffrage détaillé du cabinet</a></div>' +
+    '<p class="note">Estimation indicative, hors actualisation, revalorisation et recours des tiers payeurs.</p>';
+  r.classList.add('show');
+  lastCalc = summary;
+  document.getElementById('calcul_note').textContent = 'Votre estimation sera reprise dans votre message : ' + summary;
+}
+
+function calcPGA(){
+  const ref=num('pga_ref'), d1=date('pga_d1'), d2=date('pga_d2'), recu=num('pga_recu')||0, ij=num('pga_ij')||0;
+  if(ref===null||!d1||!d2) return fail('pga','Merci de renseigner le revenu de référence et les deux dates.');
+  if(d2<=d1) return fail('pga','La date de consolidation doit être postérieure à la date de l’accident.');
+  const n=years(d1,d2), theo=ref*n, perte=Math.max(theo-recu,0), reste=Math.max(perte-ij,0);
+  show('pga',[
+    ['Durée de la période', n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' ans'],
+    ['Revenus qui auraient été perçus', fmt(theo)],
+    ['Revenus effectivement perçus', '− '+fmt(recu)],
+    ['Perte de gains totale', fmt(perte)],
+    ['Indemnités journalières (créance des tiers payeurs)', '− '+fmt(ij)]
+  ], ['Perte restant à la charge de la victime', fmt(reste)],
+  `PGPA : perte totale ${fmt(perte)}, reste victime ${fmt(reste)} (référence ${fmt(ref)}/an, ${n.toFixed(2)} ans)`);
+}
+
+function updCoefHint(){
+  if(!BAREME) return;
+  const a=num('pgf_age'), s=document.getElementById('pgf_sexe').value, t=document.getElementById('pgf_type').value;
+  const c = a!==null && BAREME[t] && BAREME[t][s] ? BAREME[t][s][Math.round(a)] : null;
+  if(c){ document.getElementById('pgf_coef').value=c; document.getElementById('pgf_hint').textContent='Proposé par le '+BAREME_NOM+', modifiable'; }
+}
+['pgf_age','pgf_sexe','pgf_type'].forEach(id=>document.getElementById(id).addEventListener('change',updCoefHint));
+
+function calcPGF(){
+  const ref=num('pgf_ref'), ap=num('pgf_apres')||0, d1=date('pgf_d1'), d2=date('pgf_d2'), coef=num('pgf_coef');
+  if(ref===null||!d1||!d2) return fail('pgf','Merci de renseigner le revenu de référence et les deux dates.');
+  if(d2<d1) return fail('pgf','La date du calcul doit être postérieure à la date de consolidation.');
+  if(coef===null) return fail('pgf','Merci de saisir un coefficient de capitalisation.');
+  const pa=Math.max(ref-ap,0), n=years(d1,d2), echus=pa*n, futur=pa*coef;
+  show('pgf',[
+    ['Perte annuelle', fmt(pa)],
+    ['Arrérages échus ('+n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' ans)', fmt(echus)],
+    ['Capital futur ('+fmt(pa)+' × '+coef.toLocaleString('fr-FR')+')', fmt(futur)]
+  ], ['Pertes de gains futurs estimées', fmt(echus+futur)],
+  `PGPF : ${fmt(echus+futur)} (perte annuelle ${fmt(pa)}, échus ${fmt(echus)}, coefficient ${coef})`);
+}
+
+function calcPE(){
+  const ca=num('pe_ca'), t=num('pe_taux'), d=num('pe_duree'), b=num('pe_baisse'), fr=num('pe_frais')||0, eco=num('pe_eco')||0;
+  if(ca===null||t===null||d===null||b===null) return fail('pe','Merci de renseigner le chiffre d’affaires, le taux de marge, la durée et la baisse d’activité.');
+  const caPerdu=ca/12*d*b/100, marge=caPerdu*t/100, total=Math.max(marge+fr-eco,0);
+  show('pe',[
+    ['Chiffre d’affaires perdu', fmt(caPerdu)],
+    ['Perte de marge ('+t.toLocaleString('fr-FR')+' %)', fmt(marge)],
+    ['Frais supplémentaires', '+ '+fmt(fr)],
+    ['Charges économisées', '− '+fmt(eco)]
+  ], ['Perte d’exploitation estimée', fmt(total)],
+  `Perte d'exploitation : ${fmt(total)} (CA perdu ${fmt(caPerdu)}, marge ${t} %, ${d} mois)`);
+}
+
+document.querySelectorAll('[data-calc]').forEach(b=>b.addEventListener('click',()=>({pga:calcPGA,pgf:calcPGF,pe:calcPE})[b.dataset.calc]()));
+
+const P = {
+  commun_corp:["Rapport d'expertise médicale (dates d'accident et de consolidation, arrêts de travail, incidence professionnelle)","Décompte de la créance des organismes sociaux et de la prévoyance","Correspondances et offres de l'assureur"],
+  salarie:["Bulletins de salaire des 12 mois précédant l'accident et de décembre des 3 années précédentes","Avis d'imposition des 3 années précédant l'accident et des années suivantes","Attestations d'indemnités journalières (Sécurité sociale, prévoyance)","Contrat de travail et avenants (primes, avantages en nature)"],
+  fonctionnaire:["Bulletins de traitement des 12 mois précédant l'accident","Arrêtés de carrière (grade, échelon) et grille indiciaire","Avis d'imposition des 3 années précédant l'accident et des années suivantes","Décisions de congé de maladie, d'accident de service ou de demi-traitement"],
+  independant:["Bilans et comptes de résultat des 3 exercices précédant l'accident et des exercices suivants","Liasses fiscales et déclarations de revenus professionnels","Justificatifs des rémunérations et dividendes perçus","Factures de remplacement ou d'embauche pendant l'arrêt","Attestations d'indemnités journalières des caisses et de la prévoyance"],
+  sans:["Diplômes, formation en cours et projet professionnel","Justificatifs de recherche d'emploi et allocations chômage perçues","Avis d'imposition des 3 dernières années"],
+  retraite:["Notifications de pension de retraite","Justificatifs d'une éventuelle activité ou aide rémunérée","Avis d'imposition des 3 dernières années"],
+  inapt:["Avis d'inaptitude du médecin du travail","Lettre de licenciement ou de reclassement et solde de tout compte","Allocations chômage perçues depuis","Relevé de carrière et estimation des droits à retraite"],
+  conso:["Revenus perçus depuis la consolidation (bulletins, avis d'imposition)","Notification d'éventuelle rente ou pension d'invalidité"],
+  deces:["Acte de décès et livret de famille","Revenus du défunt et du foyer : avis d'imposition des 3 dernières années","Pensions de réversion et capitaux décès perçus","Âge et situation des enfants à charge"],
+  exploitation:["Bilans et comptes de résultat des 3 derniers exercices","Chiffre d'affaires mensuel des 24 mois précédant le sinistre et depuis le sinistre","Grand livre ou balance de l'exercice du sinistre","Justificatifs des frais supplémentaires engagés","Contrat d'assurance (garantie perte d'exploitation, franchise, période d'indemnisation)","Déclaration de sinistre et rapports d'expertise"],
+  materiel:["Factures d'achat des biens endommagés ou détruits","Tableau des immobilisations et des amortissements","Devis de réparation ou de remplacement","Photos des dommages et constat ou procès-verbal","Contrat d'assurance et déclaration de sinistre"],
+  stock:["Inventaire du stock à la date du sinistre et dernier inventaire de clôture","Factures d'achat des marchandises concernées"]
+};
+const PT = {commun_corp:"Pour tout dossier de préjudice corporel",inapt:"Inaptitude ou licenciement",conso:"Après consolidation",deces:"Préjudice économique des proches",stock:"Stocks"};
+function buildPieces(){
+  const t=document.getElementById('pc_type').value, g=[];
+  document.querySelectorAll('.pc-corp').forEach(e=>e.classList.toggle('hidden',t!=='corporel'));
+  document.querySelectorAll('.pc-mat').forEach(e=>e.classList.toggle('hidden',t!=='materiel'));
+  if(t==='corporel'){
+    const st=document.getElementById('pc_statut'); g.push([st.options[st.selectedIndex].text, P[st.value]]);
+    ['inapt','conso','deces'].forEach(k=>{ if(document.getElementById('pc_'+k).checked) g.push([PT[k],P[k]]); });
+    g.push([PT.commun_corp,P.commun_corp]);
+  } else if(t==='exploitation'){ g.push(["Perte d'exploitation",P.exploitation]); }
+  else { g.push(["Pertes matérielles",P.materiel]); if(document.getElementById('pc_stock').checked) g.push([PT.stock,P.stock]); }
+  document.getElementById('pc_list').innerHTML = g.map(([h,l])=>`<h3>${h}</h3><ul>${l.map(x=>`<li>${x}</li>`).join('')}</ul>`).join('');
+}
+['pc_type','pc_statut','pc_inapt','pc_conso','pc_deces','pc_stock'].forEach(id=>document.getElementById(id).addEventListener('change',buildPieces));
+buildPieces();
+
+let piecesTextOut='';
+function copyText(text, okId, el){
+  const ok=()=>document.getElementById(okId).classList.remove('hidden');
+  try{navigator.clipboard.writeText(text).then(ok,()=>{if(el){el.focus();el.select();}});}catch(e){if(el){el.focus();el.select();}}
+}
+document.getElementById('pc_copy').addEventListener('click',()=>{
+  const blocks=[...document.querySelectorAll('#pc_list h3')].map(h=>h.textContent+'\n'+[...h.nextElementSibling.querySelectorAll('li')].map(li=>'- '+li.textContent).join('\n'));
+  copyText('Pièces à réunir pour un chiffrage – Cabinet Nelly Sibillotte\n\n'+blocks.join('\n\n'),'pc_ok',null);
+});
+function mailHref(m){return 'mailto:'+CABINET_EMAIL+'?subject='+encodeURIComponent('Demande de chiffrage')+'&body='+encodeURIComponent(m);}
+document.getElementById('ct_build').addEventListener('click',()=>{
+  const nom=document.getElementById('ct_nom').value.trim(), tel=document.getElementById('ct_tel').value.trim(), obj=document.getElementById('ct_obj').value.trim();
+  const msg='Bonjour Madame Sibillotte,\n\nJe souhaite vous confier un dossier de chiffrage.'+(obj?'\n\nObjet : '+obj:'')+(lastCalc?'\n\nPremière estimation réalisée sur votre outil : '+lastCalc:'')+'\n\nCordialement,\n'+(nom||'[Votre nom et votre cabinet]')+(tel?'\nTél. : '+tel:'');
+  document.getElementById('ct_msg').value=msg;
+  document.getElementById('ct_mail').href=mailHref(msg);
+  document.getElementById('ct_out').classList.remove('hidden');
+  document.getElementById('ct_ok').classList.add('hidden');
+});
+document.getElementById('ct_copy').addEventListener('click',()=>copyText(document.getElementById('ct_msg').value,'ct_ok',document.getElementById('ct_msg')));
+document.getElementById('ct_msg').addEventListener('input',e=>{document.getElementById('ct_mail').href=mailHref(e.target.value);});
+</script>
+</body>
+</html>
