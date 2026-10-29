@@ -86,6 +86,29 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 .coord .v{font-weight:500;overflow-wrap:anywhere;user-select:all}
 .ok{color:var(--ok);font-weight:500}
 footer{padding:22px 16px 40px;color:var(--muted);font-size:.95rem;border-top:1px solid var(--line);text-align:center}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;background:var(--navy);border-radius:10px;padding:22px 10px;margin:26px 0 8px}
+.kpis div{text-align:center;padding:8px 10px;color:#e9e4d8;font-size:.98rem;line-height:1.35}
+.kpis b{display:block;font-family:var(--display);font-style:italic;font-weight:600;font-size:clamp(1.9rem,4.5vw,2.5rem);color:#d9b56e;line-height:1.1;margin-bottom:4px}
+.block{padding-block:26px 6px}
+.doms{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.dom{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px}
+.dom svg{width:30px;height:30px;color:var(--gold)}
+.dom h3{margin:8px 0 4px;font-family:var(--display);font-weight:600;font-size:1.35rem;line-height:1.2}
+.dom p{margin:0;color:var(--muted);font-size:1rem}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;counter-reset:none}
+.steps li{position:relative;padding-top:52px}
+.steps li::before{content:"";position:absolute;top:21px;left:44px;right:-18px;height:1px;background:var(--gold-soft)}
+.steps li:last-child::before{display:none}
+.steps .n{position:absolute;top:0;left:0;width:42px;height:42px;border-radius:50%;border:1px solid var(--gold);background:var(--bg);display:grid;place-items:center;font-family:var(--display);font-style:italic;font-size:1.3rem;color:#8a6a2f}
+.steps h3{margin:0 0 4px;font-family:var(--display);font-weight:600;font-size:1.35rem;line-height:1.2}
+.steps p{margin:0;color:var(--muted);font-size:1rem}
+.final-cta{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:30px 20px;text-align:center;margin:8px 0 18px}
+.final-cta svg{width:54px;height:auto;color:var(--gold)}
+.final-cta h2{margin:6px 0 4px;font-family:var(--display);font-style:italic;font-weight:600;font-size:clamp(1.7rem,4.5vw,2.3rem)}
+.final-cta p{margin:0 0 16px;color:var(--muted)}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.cta-row .pill{margin-top:0}
+@media (max-width:640px){.steps{grid-template-columns:1fr;gap:0;padding-left:0}.steps li{padding:0 0 22px 58px}.steps li::before{top:44px;bottom:0;left:21px;right:auto;width:1px;height:auto}.steps .n{top:0}}
 .veil{position:fixed;inset:0;background:rgba(27,42,74,.38);opacity:0;pointer-events:none;transition:opacity .4s ease;z-index:40}
 .veil.on{opacity:1;pointer-events:auto}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);border-left:2px solid var(--gold);box-shadow:-12px 0 40px rgba(27,42,74,.18);transform:translateX(104%);transition:transform .55s cubic-bezier(.22,.8,.2,1),visibility 0s linear .55s;visibility:hidden;z-index:50;display:flex;flex-direction:column}
@@ -105,7 +128,7 @@ body.locked{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.veil,.drawer,.drawer.on,.dr-body>*{transition:none}}
 .hidden{display:none}
 @media (max-width:640px){.scales{display:none}.hero .wrap{gap:16px}}
-@media print{.hero,.tagline,.tel-line,.entry,.tabs,.actions,.band,footer,.grid,.pc-corp,.pc-mat,.lead,main>.note{display:none!important}.panel.hidden{display:none!important}.card{border:0}}
+@media print{.kpis,.block,.final-cta,.hero,.tagline,.tel-line,.entry,.tabs,.actions,.band,footer,.grid,.pc-corp,.pc-mat,.lead,main>.note{display:none!important}.panel.hidden{display:none!important}.card{border:0}}
 </style>
 </head>
 <body>
@@ -132,6 +155,36 @@ body.locked{overflow:hidden}
 
 <main class="wrap">
 
+  <section class="kpis" aria-label="Chiffres clés">
+    <div><b>20 ans</b><span>d'expertise comptable</span></div>
+    <div><b>13 ans</b><span>d'expertise judiciaire</span></div>
+    <div><b>France</b><span>entière et DOM</span></div>
+    <div><b>2 barèmes</b><span>2025 intégrés : Gazette du Palais et BCRIV</span></div>
+  </section>
+
+  <section class="block" aria-labelledby="dom-t">
+    <div class="section-title"><h2 id="dom-t">Ce que nous chiffrons</h2></div>
+    <div class="doms">
+      <article class="dom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/><path d="M12 21s-8-4.6-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 1.1-.2 2.1-.6 3"/></svg><h3>Préjudice corporel</h3><p>Accidents de la route, médicaux, du travail, agressions</p></article>
+      <article class="dom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v10h16V10"/><path d="M3 10l2-6h14l2 6"/><path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 20v-5h4v5"/></svg><h3>Perte d'exploitation</h3><p>Sinistres, dégâts des eaux, arrêts d'activité</p></article>
+      <article class="dom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg><h3>Pertes matérielles</h3><p>Biens, stocks, frais de remise en état</p></article>
+      <article class="dom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4M4 20h16"/><path d="M7 15l4-4 3 3 5-6"/></svg><h3>Valorisation</h3><p>Sociétés, fonds de commerce, patientèles et clientèles</p></article>
+      <article class="dom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A5 5 0 0 1 21 19"/></svg><h3>Litiges entre associés</h3><p>Règlement des comptes, préjudice d'actionnaire</p></article>
+      <article class="dom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></svg><h3>Successions et divorces</h3><p>Évaluation du patrimoine, flux entre héritiers</p></article>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="steps-t">
+    <div class="section-title"><h2 id="steps-t">Comment se déroule un chiffrage</h2></div>
+    <ol class="steps">
+      <li><span class="n">1</span><h3>Premier échange</h3><p>Vous présentez le dossier, nous évaluons ensemble la mission.</p></li>
+      <li><span class="n">2</span><h3>Transmission des pièces</h3><p>Une liste adaptée au dossier, des échanges simples et confidentiels.</p></li>
+      <li><span class="n">3</span><h3>Analyse et rapport chiffré</h3><p>Une méthode détaillée et des hypothèses justifiées, poste par poste.</p></li>
+      <li><span class="n">4</span><h3>Accompagnement</h3><p>Des explications sur le chiffrage, jusqu’à la transaction ou l’audience.</p></li>
+    </ol>
+  </section>
+
+
 
   <section class="band">
     <svg viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#c9a868" stroke-width="1.2" opacity=".55"><path d="M0 150 C 180 60, 360 160, 600 40"/><path d="M0 156 C 190 70, 370 165, 600 52"/><path d="M0 162 C 200 80, 380 170, 600 64"/><path d="M60 160 C 240 100, 420 150, 600 90"/></g></svg>
@@ -139,6 +192,14 @@ body.locked{overflow:hidden}
     <p>Expert-comptable depuis 20 ans et forte de 13 ans d'expertise judiciaire, je mets à votre disposition des outils fiables et accessibles pour le chiffrage du préjudice corporel et économique, partout en France, DOM compris.</p>
   </section>
 
+
+
+  <section class="final-cta">
+    <svg viewBox="0 0 160 170" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><circle cx="80" cy="14" r="6" fill="currentColor"/><path d="M80 19v128M54 158h52M62 150h36l-4-7H66z"/><path d="M14 40c22-8 44-12 66-12s44 4 66 12"/><path d="M24 40L8 92M24 40l16 52M136 40l-16 52M136 40l16 52"/><path d="M4 92c4 12 36 12 40 0zM116 92c4 12 36 12 40 0z" fill="currentColor" fill-opacity=".18"/></svg>
+    <h2>Un dossier en cours ? Parlons-en.</h2>
+    <p>Intervention partout en France, DOM compris.</p>
+    <div class="cta-row"><a class="pill" href="#contact" data-open="contact">Nous écrire</a><a class="btn ghost" href="tel:+33683070535">06 83 07 05 35</a></div>
+  </section>
 
   <p class="note">Les résultats sont des estimations indicatives fondées sur les données saisies. Ils ne remplacent pas un chiffrage établi par un expert-comptable au vu des pièces du dossier.</p>
 </main>
