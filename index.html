@@ -86,9 +86,26 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 .coord .v{font-weight:500;overflow-wrap:anywhere;user-select:all}
 .ok{color:var(--ok);font-weight:500}
 footer{padding:22px 16px 40px;color:var(--muted);font-size:.95rem;border-top:1px solid var(--line);text-align:center}
+.veil{position:fixed;inset:0;background:rgba(27,42,74,.38);opacity:0;pointer-events:none;transition:opacity .4s ease;z-index:40}
+.veil.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);border-left:2px solid var(--gold);box-shadow:-12px 0 40px rgba(27,42,74,.18);transform:translateX(104%);transition:transform .55s cubic-bezier(.22,.8,.2,1),visibility 0s linear .55s;visibility:hidden;z-index:50;display:flex;flex-direction:column}
+.drawer.on{transform:none;visibility:visible;transition:transform .55s cubic-bezier(.22,.8,.2,1),visibility 0s}
+.dr-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:calc(18px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 14px 22px;border-bottom:1px solid var(--line);background:#fbf7ef}
+.dr-sub{margin:0;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:#8a6a2f}
+.dr-head h2{margin:2px 0 0;font-family:var(--display);font-style:italic;font-weight:600;font-size:clamp(1.6rem,4vw,2.1rem);line-height:1.15}
+.dr-close{flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy);cursor:pointer;display:grid;place-items:center}
+.dr-close:hover{border-color:var(--gold)}
+.dr-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:18px max(20px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) 22px}
+.dr-body>*{opacity:0;transform:translateX(18px);transition:opacity .45s ease .15s,transform .45s ease .15s}
+.drawer.on .dr-body>*{opacity:1;transform:none}
+.drawer.on .dr-body>*:nth-child(2){transition-delay:.22s}
+.drawer.on .dr-body>*:nth-child(3){transition-delay:.29s}
+.dr-body .card{border-radius:8px}
+body.locked{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.veil,.drawer,.drawer.on,.dr-body>*{transition:none}}
 .hidden{display:none}
 @media (max-width:640px){.scales{display:none}.hero .wrap{gap:16px}}
-@media print{.hero,.tagline,.tel-line,.entry,.tabs,.actions,.band,#contact,footer,.grid,.pc-corp,.pc-mat,.lead,main>.note{display:none!important}.panel.hidden{display:none!important}.card{border:0}}
+@media print{.hero,.tagline,.tel-line,.entry,.tabs,.actions,.band,footer,.grid,.pc-corp,.pc-mat,.lead,main>.note{display:none!important}.panel.hidden{display:none!important}.card{border:0}}
 </style>
 </head>
 <body>
@@ -107,20 +124,35 @@ footer{padding:22px 16px 40px;color:var(--muted);font-size:.95rem;border-top:1px
   <div class="tagline"><span>Des outils gratuits pour une première estimation.</span></div>
   <p class="tel-line">Expert-comptable à Fréjus · <a href="tel:+33683070535">06 83 07 05 35</a> · <a href="https://www.nelly-sibillotte.fr" target="_blank" rel="noopener">Site du cabinet</a></p>
   <section class="entry" aria-label="Accès rapides">
-    <article><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="4" width="28" height="40" rx="4"/><rect x="15" y="9" width="18" height="8" rx="1"/><g fill="currentColor" stroke="none"><rect x="15" y="22" width="5" height="4"/><rect x="21.5" y="22" width="5" height="4"/><rect x="28" y="22" width="5" height="4"/><rect x="15" y="29" width="5" height="4"/><rect x="21.5" y="29" width="5" height="4"/><rect x="28" y="29" width="5" height="4"/><rect x="15" y="36" width="5" height="4"/><rect x="21.5" y="36" width="5" height="4"/><rect x="28" y="36" width="5" height="4"/></g></svg><h2>Calculer</h2><p>Accédez à nos calculateurs pour estimer vos préjudices.</p><a class="pill" href="#outils" data-go="pga">Voir les outils</a></article>
-    <article><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h13l4 4h21v22a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M14 18V7h16l5 5v6"/><path d="M19 12h9M19 16h7"/></svg><h2>Préparer</h2><p>Découvrez la liste des pièces à réunir pour votre dossier.</p><a class="pill" href="#outils" data-go="pieces">Voir la liste</a></article>
-    <article><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="38" height="27" rx="3"/><path d="M6 13l18 14 18-14"/></svg><h2>Nous contacter</h2><p>Demandez un chiffrage détaillé ou posez vos questions.</p><a class="pill" href="#contact">Nous écrire</a></article>
+    <article><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="4" width="28" height="40" rx="4"/><rect x="15" y="9" width="18" height="8" rx="1"/><g fill="currentColor" stroke="none"><rect x="15" y="22" width="5" height="4"/><rect x="21.5" y="22" width="5" height="4"/><rect x="28" y="22" width="5" height="4"/><rect x="15" y="29" width="5" height="4"/><rect x="21.5" y="29" width="5" height="4"/><rect x="28" y="29" width="5" height="4"/><rect x="15" y="36" width="5" height="4"/><rect x="21.5" y="36" width="5" height="4"/><rect x="28" y="36" width="5" height="4"/></g></svg><h2>Calculer</h2><p>Accédez à nos calculateurs pour estimer vos préjudices.</p><a class="pill" href="#calculateurs" data-open="calc">Voir les outils</a></article>
+    <article><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h13l4 4h21v22a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M14 18V7h16l5 5v6"/><path d="M19 12h9M19 16h7"/></svg><h2>Préparer</h2><p>Découvrez la liste des pièces à réunir pour votre dossier.</p><a class="pill" href="#pieces" data-open="pieces">Voir la liste</a></article>
+    <article><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="38" height="27" rx="3"/><path d="M6 13l18 14 18-14"/></svg><h2>Nous contacter</h2><p>Demandez un chiffrage détaillé ou posez vos questions.</p><a class="pill" href="#contact" data-open="contact">Nous écrire</a></article>
   </section>
 </div>
 
 <main class="wrap">
-  <section class="outils" id="outils">
-  <div class="section-title"><h2>Les outils</h2></div>
+
+
+  <section class="band">
+    <svg viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#c9a868" stroke-width="1.2" opacity=".55"><path d="M0 150 C 180 60, 360 160, 600 40"/><path d="M0 156 C 190 70, 370 165, 600 52"/><path d="M0 162 C 200 80, 380 170, 600 64"/><path d="M60 160 C 240 100, 420 150, 600 90"/></g></svg>
+    <h2>Une expertise au service de vos droits</h2>
+    <p>Expert-comptable depuis 20 ans et forte de 13 ans d'expertise judiciaire, je mets à votre disposition des outils fiables et accessibles pour le chiffrage du préjudice corporel et économique, partout en France, DOM compris.</p>
+  </section>
+
+
+  <p class="note">Les résultats sont des estimations indicatives fondées sur les données saisies. Ils ne remplacent pas un chiffrage établi par un expert-comptable au vu des pièces du dossier.</p>
+</main>
+<div class="veil" id="veil" aria-hidden="true"></div>
+<aside class="drawer" id="dr-calc" role="dialog" aria-modal="true" aria-labelledby="dr-calc-t" aria-hidden="true">
+  <div class="dr-head">
+    <div><p class="dr-sub">Calculer</p><h2 id="dr-calc-t">Les calculateurs</h2></div>
+    <button class="dr-close" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="dr-body">
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-panel="pga">Pertes de gains actuels<small>Accident → consolidation</small></button>
     <button class="tab" role="tab" aria-selected="false" data-panel="pgf">Pertes de gains futurs<small>Après consolidation</small></button>
     <button class="tab" role="tab" aria-selected="false" data-panel="pe">Perte d'exploitation<small>Entreprises, sinistres</small></button>
-    <button class="tab" role="tab" aria-selected="false" data-panel="pieces">Pièces à réunir<small>Liste adaptée au dossier</small></button>
   </div>
 
   <!-- PGPA -->
@@ -177,9 +209,17 @@ footer{padding:22px 16px 40px;color:var(--muted);font-size:.95rem;border-top:1px
     <div class="result" id="pe_res"></div>
   </section>
 
+
+  </div>
+</aside>
+<aside class="drawer" id="dr-pieces" role="dialog" aria-modal="true" aria-labelledby="dr-pieces-t" aria-hidden="true">
+  <div class="dr-head">
+    <div><p class="dr-sub">Préparer</p><h2 id="dr-pieces-t">Pièces à réunir</h2></div>
+    <button class="dr-close" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="dr-body">
   <!-- Pièces -->
-  <section class="card panel hidden check" id="pieces">
-    <h2>Pièces à réunir pour un chiffrage</h2>
+  <section class="card check" id="pieces">
     <p class="lead">Répondez à quelques questions : la liste s'adapte à votre dossier.</p>
     <div class="grid">
       <div><label>Type de dossier</label><select id="pc_type">
@@ -202,21 +242,20 @@ footer{padding:22px 16px 40px;color:var(--muted);font-size:.95rem;border-top:1px
       <label><input type="checkbox" id="pc_stock" style="width:auto"> Stocks ou marchandises endommagés</label>
     </div>
     <div id="pc_list" style="margin-top:8px"></div>
-    <div class="actions"><button class="btn ghost" type="button" id="pc_copy">Copier la liste</button><a class="btn alt" href="#contact">Confier un dossier au cabinet</a></div>
+    <div class="actions"><button class="btn ghost" type="button" id="pc_copy">Copier la liste</button><a class="btn alt" href="#contact" data-open="contact">Confier un dossier au cabinet</a></div>
     <p class="ok hidden" id="pc_ok">Liste copiée.</p>
   </section>
 
-  </section>
-
-  <section class="band">
-    <svg viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#c9a868" stroke-width="1.2" opacity=".55"><path d="M0 150 C 180 60, 360 160, 600 40"/><path d="M0 156 C 190 70, 370 165, 600 52"/><path d="M0 162 C 200 80, 380 170, 600 64"/><path d="M60 160 C 240 100, 420 150, 600 90"/></g></svg>
-    <h2>Une expertise au service de vos droits</h2>
-    <p>Expert-comptable depuis 20 ans et forte de 13 ans d'expertise judiciaire, je mets à votre disposition des outils fiables et accessibles pour le chiffrage du préjudice corporel et économique, partout en France, DOM compris.</p>
-  </section>
-
+  </div>
+</aside>
+<aside class="drawer" id="dr-contact" role="dialog" aria-modal="true" aria-labelledby="dr-contact-t" aria-hidden="true">
+  <div class="dr-head">
+    <div><p class="dr-sub">Nous contacter</p><h2 id="dr-contact-t">Recevoir un chiffrage détaillé</h2></div>
+    <button class="dr-close" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="dr-body">
   <!-- Contact -->
   <section class="card" id="contact">
-    <h2>Recevoir un chiffrage détaillé du cabinet</h2>
     <p class="lead">Fort de 20 ans d'expertise comptable et de 13 ans d'expertise judiciaire, le cabinet intervient dans toute la France, DOM compris, pour le chiffrage du préjudice corporel, de la perte d'exploitation et des pertes matérielles.</p>
     <div class="grid">
         <div><label for="ct_nom">Votre nom et votre cabinet</label><input id="ct_nom" autocomplete="name"></div>
@@ -237,8 +276,8 @@ footer{padding:22px 16px 40px;color:var(--muted);font-size:.95rem;border-top:1px
       </div>
   </section>
 
-  <p class="note">Les résultats sont des estimations indicatives fondées sur les données saisies. Ils ne remplacent pas un chiffrage établi par un expert-comptable au vu des pièces du dossier.</p>
-</main>
+  </div>
+</aside>
 
 <footer><div class="wrap">Cabinet Nelly Sibillotte, expert-comptable · Fréjus (Var) · <a href="https://www.nelly-sibillotte.fr" target="_blank" rel="noopener">www.nelly-sibillotte.fr</a></div></footer>
 
@@ -261,7 +300,28 @@ function openTab(id){
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('hidden', p.id !== id));
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => openTab(t.dataset.panel)));
-document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => openTab(a.dataset.go)));
+const veil = document.getElementById('veil');
+let openDr = null, lastFocus = null;
+function openDrawer(key){
+  const d = document.getElementById('dr-' + key); if(!d) return;
+  if(openDr && openDr !== d){ openDr.classList.remove('on'); openDr.setAttribute('aria-hidden','true'); }
+  if(!openDr) lastFocus = document.activeElement;
+  d.classList.add('on'); d.setAttribute('aria-hidden','false'); veil.classList.add('on'); document.body.classList.add('locked');
+  d.querySelector('.dr-body').scrollTop = 0;
+  openDr = d; setTimeout(() => d.querySelector('.dr-close').focus({preventScroll:true}), 60);
+}
+function closeDrawer(){
+  if(!openDr) return;
+  openDr.classList.remove('on'); openDr.setAttribute('aria-hidden','true'); veil.classList.remove('on'); document.body.classList.remove('locked');
+  openDr = null; if(lastFocus) lastFocus.focus({preventScroll:true});
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-open]'); if(!a) return;
+  e.preventDefault(); openDrawer(a.dataset.open);
+});
+document.querySelectorAll('.dr-close').forEach(b => b.addEventListener('click', closeDrawer));
+veil.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
 
 function fail(k, msg){ const e=document.getElementById(k+'_err'); e.textContent=msg; e.classList.remove('hidden'); document.getElementById(k+'_res').classList.remove('show'); }
 function show(k, rows, total, summary){
@@ -269,7 +329,7 @@ function show(k, rows, total, summary){
   const r = document.getElementById(k+'_res');
   r.innerHTML = '<table>' + rows.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('') +
     `<tr class="total"><td>${total[0]}</td><td>${total[1]}</td></tr></table>` +
-    '<div class="cta"><a class="btn alt" href="#contact">Recevoir un chiffrage détaillé du cabinet</a></div>' +
+    '<div class="cta"><a class="btn alt" href="#contact" data-open="contact">Recevoir un chiffrage détaillé du cabinet</a></div>' +
     '<p class="note">Estimation indicative, hors actualisation, revalorisation et recours des tiers payeurs.</p>';
   r.classList.add('show');
   lastCalc = summary;
