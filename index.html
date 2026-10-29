@@ -243,9 +243,10 @@ body.locked{overflow:hidden}
       <div><label>Date du calcul (liquidation)</label><input type="date" id="pgf_d2"></div>
       <div><label for="pgf_age">Âge de la victime à la date du calcul<span class="hint">En années révolues</span></label><input type="number" id="pgf_age" min="0" max="103" step="1" inputmode="numeric"></div>
       <div><label for="pgf_sexe">Sexe</label><select id="pgf_sexe"><option value="F">Femme</option><option value="H">Homme</option></select></div>
-      <div><label for="pgf_bareme">Barème de capitalisation</label><select id="pgf_bareme"><option value="gp">Gazette du Palais 2025 (taux 0,5 %)</option><option value="bcriv">BCRIV 2025 (France Assureurs, taux selon l'âge)</option></select></div>
+      <div><label for="pgf_bareme">Barème de capitalisation</label><select id="pgf_bareme"><option value="gp">Gazette du Palais 2025 (taux 0,5 %)</option><option value="bcriv">BCRIV 2025 (France Assureurs, taux selon l'âge)</option><option value="perso">Barème personnalisé</option></select></div>
       <div id="pgf_table_f"><label for="pgf_table">Table de mortalité</label><select id="pgf_table"><option value="stat">Stationnaire (INSEE 2020-2022)</option><option value="pros">Prospective (INSEE 2021-2121)</option></select></div>
-      <div><label for="pgf_fin">Durée de la rente</label><select id="pgf_fin"><option value="v">Viagère</option><option value="69">Jusqu'à 69 ans</option><option value="68">Jusqu'à 68 ans</option><option value="67">Jusqu'à 67 ans</option><option value="66">Jusqu'à 66 ans</option><option value="65">Jusqu'à 65 ans</option><option value="64" selected>Jusqu'à 64 ans</option><option value="63">Jusqu'à 63 ans</option><option value="62">Jusqu'à 62 ans</option><option value="61">Jusqu'à 61 ans</option><option value="60">Jusqu'à 60 ans</option><option value="59">Jusqu'à 59 ans</option><option value="55">Jusqu'à 55 ans</option><option value="50">Jusqu'à 50 ans</option><option value="29">Jusqu'à 29 ans</option><option value="25">Jusqu'à 25 ans</option><option value="21">Jusqu'à 21 ans</option><option value="20">Jusqu'à 20 ans</option><option value="18">Jusqu'à 18 ans</option><option value="16">Jusqu'à 16 ans</option></select><span class="hint">Âge lors du dernier arrérage</span></div>
+      <div id="pgf_nom_f" class="hidden"><label for="pgf_nom">Nom du barème utilisé<span class="hint">Facultatif, par exemple BCRIV 2023 ou Gazette du Palais 2022</span></label><input id="pgf_nom" maxlength="60" autocomplete="off"></div>
+      <div id="pgf_fin_f"><label for="pgf_fin">Durée de la rente</label><select id="pgf_fin"><option value="v">Viagère</option><option value="69">Jusqu'à 69 ans</option><option value="68">Jusqu'à 68 ans</option><option value="67">Jusqu'à 67 ans</option><option value="66">Jusqu'à 66 ans</option><option value="65">Jusqu'à 65 ans</option><option value="64" selected>Jusqu'à 64 ans</option><option value="63">Jusqu'à 63 ans</option><option value="62">Jusqu'à 62 ans</option><option value="61">Jusqu'à 61 ans</option><option value="60">Jusqu'à 60 ans</option><option value="59">Jusqu'à 59 ans</option><option value="55">Jusqu'à 55 ans</option><option value="50">Jusqu'à 50 ans</option><option value="29">Jusqu'à 29 ans</option><option value="25">Jusqu'à 25 ans</option><option value="21">Jusqu'à 21 ans</option><option value="20">Jusqu'à 20 ans</option><option value="18">Jusqu'à 18 ans</option><option value="16">Jusqu'à 16 ans</option></select><span class="hint">Âge lors du dernier arrérage</span></div>
       <div><label for="pgf_coef">Coefficient de capitalisation<span class="hint" id="pgf_hint">Rempli automatiquement d'après le barème, modifiable</span></label><input type="number" id="pgf_coef" min="0" step="0.001" inputmode="decimal"></div>
     </div>
     <div class="actions"><button class="btn" data-calc="pgf">Calculer</button></div>
@@ -363,6 +364,7 @@ const BAREMES = {
   bcriv:{nom:'BCRIV 2025', court:'BCRIV 2025', fins:[68,67,66,65,64,63,62,61,60,55,25,21,20,18,16], ordre:FINS_BCRIV,
       src:'Coefficients du BCRIV 2025 (barème de capitalisation de référence pour l\u2019indemnisation des victimes) : tables INSEE 2018-2020, courbe de taux EIOPA, inflation attendue 2 %, rente trimestrielle.'}
 };
+BAREMES.perso={nom:'Barème personnalisé', court:'barème personnalisé', fins:[], ordre:[], src:'Barème personnalisé : saisissez le coefficient de capitalisation issu du barème de votre choix.'};
 let BAREME_NOM = BAREMES.gp.nom;
 
 function openTab(id){
@@ -462,7 +464,15 @@ function lookupCoef(){
 function setBareme(){
   const bk=document.getElementById('pgf_bareme').value, b=BAREMES[bk], sel=document.getElementById('pgf_fin'), keep=sel.value;
   BAREME_NOM=b.nom;
-  document.getElementById('pgf_table_f').classList.toggle('hidden', bk==='bcriv');
+  const perso = bk==='perso';
+  document.getElementById('pgf_table_f').classList.toggle('hidden', bk!=='gp');
+  document.getElementById('pgf_fin_f').classList.toggle('hidden', perso);
+  document.getElementById('pgf_nom_f').classList.toggle('hidden', !perso);
+  if(perso){
+    coefLabel=''; document.getElementById('pgf_coef').value='';
+    document.getElementById('pgf_hint').textContent='Saisissez le coefficient de votre barème';
+    document.getElementById('pgf_src').textContent=b.src; BAREME_NOM=b.nom; return;
+  }
   document.getElementById('pgf_src').textContent=b.src;
   sel.textContent='';
   [['v','Viagère']].concat(b.fins.map(e=>[String(e),'Jusqu’à '+e+' ans'])).forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});
@@ -471,13 +481,14 @@ function setBareme(){
 }
 let coefLabel='';
 function updCoefHint(){
+  if(document.getElementById('pgf_bareme').value==='perso') return;
   const r=lookupCoef(), hint=document.getElementById('pgf_hint');
   if(r.c!==null){ document.getElementById('pgf_coef').value=r.c.toFixed(3); coefLabel=r.label+(document.getElementById('pgf_bareme').value==='bcriv'?'':', table '+(document.getElementById('pgf_table').value==='stat'?'stationnaire':'prospective'))+', '+(document.getElementById('pgf_sexe').value==='F'?'femme':'homme')+' de '+Math.floor(num('pgf_age'))+' ans'; hint.textContent=BAREMES[document.getElementById('pgf_bareme').value].court+', '+coefLabel+'. Modifiable.'; }
   else { coefLabel=''; hint.textContent=(num('pgf_age')===null?'Rempli automatiquement d\u2019après le barème, modifiable':r.msg+' : saisissez le coefficient manuellement'); }
 }
 document.getElementById('pgf_bareme').addEventListener('change',setBareme);
 ['pgf_age','pgf_sexe','pgf_table','pgf_fin'].forEach(id=>{const el=document.getElementById(id);el.addEventListener('change',updCoefHint);el.addEventListener('input',updCoefHint);});
-document.getElementById('pgf_coef').addEventListener('input',()=>{coefLabel='';document.getElementById('pgf_hint').textContent='Coefficient saisi manuellement';});
+document.getElementById('pgf_coef').addEventListener('input',()=>{coefLabel='';if(document.getElementById('pgf_bareme').value!=='perso')document.getElementById('pgf_hint').textContent='Coefficient saisi manuellement';});
 
 function calcPGF(){
   const ref=num('pgf_ref'), ap=num('pgf_apres')||0, d1=date('pgf_d1'), d2=date('pgf_d2'), coef=num('pgf_coef');
@@ -487,13 +498,14 @@ function calcPGF(){
   if(years(d1,d2)>60) return fail('pgf','La période dépasse 60 ans : vérifiez les dates.');
   if(d2<d1) return fail('pgf','La date du calcul doit être postérieure à la date de consolidation.');
   if(coef===null) return fail('pgf','Merci de saisir un coefficient de capitalisation.');
+  const perso=document.getElementById('pgf_bareme').value==='perso', nomB=document.getElementById('pgf_nom').value.trim(), persoNom='barème personnalisé'+(nomB?' ('+nomB+')':'');
   const pa=Math.max(ref-ap,0), n=years(d1,d2), echus=pa*n, futur=pa*coef;
   show('pgf',[
     ['Perte annuelle', fmt(pa)],
     ['Arrérages échus ('+n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' ans)', fmt(echus)],
     ['Capital futur ('+fmt(pa)+' × '+coef.toLocaleString('fr-FR',{minimumFractionDigits:3})+')', fmt(futur)]
-  ].concat(coefLabel?[['Coefficient : '+BAREME_NOM+', '+coefLabel, '']]:[]), ['Pertes de gains futurs estimées', fmt(echus+futur)],
-  `Pertes de gains futurs : ${fmt(echus+futur)} (perte annuelle ${fmt(pa)}, arrérages échus ${fmt(echus)}, coefficient ${coef}${coefLabel?' – '+BAREMES[document.getElementById('pgf_bareme').value].court+', '+coefLabel:''})`);
+  ].concat(perso?[['Coefficient : '+persoNom, '']]:(coefLabel?[['Coefficient : '+BAREME_NOM+', '+coefLabel, '']]:[])), ['Pertes de gains futurs estimées', fmt(echus+futur)],
+  `Pertes de gains futurs : ${fmt(echus+futur)} (perte annuelle ${fmt(pa)}, arrérages échus ${fmt(echus)}, coefficient ${coef}${perso?' – '+persoNom:(coefLabel?' – '+BAREMES[document.getElementById('pgf_bareme').value].court+', '+coefLabel:'')})`);
 }
 
 function calcPE(){
