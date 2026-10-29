@@ -171,7 +171,7 @@ footer{padding:22px 16px 40px;color:var(--muted);font-size:.85rem;border-top:1px
         <div><label for="ct_nom">Votre nom et votre cabinet</label><input id="ct_nom" autocomplete="name"></div>
         <div><label for="ct_tel">Votre téléphone (facultatif)</label><input id="ct_tel" type="tel" autocomplete="tel"></div>
       </div>
-      <div style="margin-top:14px"><label for="ct_obj">Objet de votre demande<span class="hint">Merci de ne pas indiquer le nom de la victime ni d'informations médicales : les pièces s'échangent ensuite directement avec le cabinet.</span></label><textarea id="ct_obj" rows="3"></textarea></div>
+      <div style="margin-top:14px"><label for="ct_obj">Objet de votre demande</label><textarea id="ct_obj" rows="3"></textarea></div>
       <p class="note" id="calcul_note"></p>
       <div class="actions"><button class="btn alt" type="button" id="ct_build">Préparer mon message</button></div>
       <div id="ct_out" class="hidden">
@@ -223,9 +223,37 @@ function show(k, rows, total, summary){
   document.getElementById('calcul_note').textContent = 'Votre estimation sera reprise dans votre message : ' + summary;
 }
 
+/* Contrôles de saisie : pas de valeurs négatives ni de durées irréalistes */
+const LIMITS = {
+  pga_ref:[0,10000000,'Le revenu de référence'], pga_recu:[0,100000000,'Les revenus perçus'], pga_ij:[0,100000000,'Les indemnités journalières'],
+  pgf_ref:[0,10000000,'Le revenu avant l\u2019accident'], pgf_apres:[0,10000000,'Le revenu après consolidation'], pgf_age:[0,103,'L\u2019âge de la victime'], pgf_coef:[0,100,'Le coefficient'],
+  pe_ca:[0,1000000000,'Le chiffre d\u2019affaires'], pe_taux:[0,100,'Le taux de marge'], pe_duree:[0,120,'La durée de la période'], pe_baisse:[0,100,'La baisse d\u2019activité'], pe_frais:[0,100000000,'Les frais supplémentaires'], pe_eco:[0,100000000,'Les charges économisées']
+};
+const UNITS = {pgf_age:' ans', pe_taux:' %', pe_duree:' mois', pe_baisse:' %'};
+function checkFields(k){
+  for (const id of Object.keys(LIMITS).filter(i=>i.startsWith(k+'_'))){
+    const raw=document.getElementById(id).value; if(raw==='') continue;
+    const v=parseFloat(raw), [mn,mx,lab]=LIMITS[id], u=UNITS[id]||'';
+    if(isNaN(v)) { fail(k, 'Saisie incorrecte : vérifiez '+lab.charAt(0).toLowerCase()+lab.slice(1)+'.'); return false; }
+    if(v<mn) { fail(k, 'Valeur négative impossible : vérifiez '+lab.charAt(0).toLowerCase()+lab.slice(1)+'.'); document.getElementById(id).focus(); return false; }
+    if(v>mx) { fail(k, 'Valeur trop élevée : vérifiez '+lab.charAt(0).toLowerCase()+lab.slice(1)+' (maximum '+mx.toLocaleString('fr-FR')+(u||' €')+').'); document.getElementById(id).focus(); return false; }
+  }
+  return true;
+}
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+function checkDate(k, d, lab, allowFuture){
+  if(d.getFullYear()<1950 || d.getFullYear()>2100) { fail(k, lab+' semble incorrecte : vérifiez l\u2019année.'); return false; }
+  if(!allowFuture && d>TODAY) { fail(k, lab+' ne peut pas être dans le futur.'); return false; }
+  return true;
+}
+document.querySelectorAll('input[type="number"]').forEach(el=>el.addEventListener('keydown',e=>{ if(e.key==='-'||e.key==='e'||e.key==='E'||e.key==='+') e.preventDefault(); }));
+
 function calcPGA(){
   const ref=num('pga_ref'), d1=date('pga_d1'), d2=date('pga_d2'), recu=num('pga_recu')||0, ij=num('pga_ij')||0;
+  if(!checkFields('pga')) return;
   if(ref===null||!d1||!d2) return fail('pga','Merci de renseigner le revenu de référence et les deux dates.');
+  if(!checkDate('pga',d1,'La date de l\u2019accident',false) || !checkDate('pga',d2,'La date de consolidation',true)) return;
+  if(years(d1,d2)>60) return fail('pga','La période dépasse 60 ans : vérifiez les dates.');
   if(d2<=d1) return fail('pga','La date de consolidation doit être postérieure à la date de l’accident.');
   const n=years(d1,d2), theo=ref*n, perte=Math.max(theo-recu,0), reste=Math.max(perte-ij,0);
   show('pga',[
@@ -259,7 +287,10 @@ document.getElementById('pgf_coef').addEventListener('input',()=>{coefLabel='';d
 
 function calcPGF(){
   const ref=num('pgf_ref'), ap=num('pgf_apres')||0, d1=date('pgf_d1'), d2=date('pgf_d2'), coef=num('pgf_coef');
+  if(!checkFields('pgf')) return;
   if(ref===null||!d1||!d2) return fail('pgf','Merci de renseigner le revenu de référence et les deux dates.');
+  if(!checkDate('pgf',d1,'La date de consolidation',true) || !checkDate('pgf',d2,'La date du calcul',true)) return;
+  if(years(d1,d2)>60) return fail('pgf','La période dépasse 60 ans : vérifiez les dates.');
   if(d2<d1) return fail('pgf','La date du calcul doit être postérieure à la date de consolidation.');
   if(coef===null) return fail('pgf','Merci de saisir un coefficient de capitalisation.');
   const pa=Math.max(ref-ap,0), n=years(d1,d2), echus=pa*n, futur=pa*coef;
@@ -273,6 +304,7 @@ function calcPGF(){
 
 function calcPE(){
   const ca=num('pe_ca'), t=num('pe_taux'), d=num('pe_duree'), b=num('pe_baisse'), fr=num('pe_frais')||0, eco=num('pe_eco')||0;
+  if(!checkFields('pe')) return;
   if(ca===null||t===null||d===null||b===null) return fail('pe','Merci de renseigner le chiffre d’affaires, le taux de marge, la durée et la baisse d’activité.');
   const caPerdu=ca/12*d*b/100, marge=caPerdu*t/100, total=Math.max(marge+fr-eco,0);
   show('pe',[
