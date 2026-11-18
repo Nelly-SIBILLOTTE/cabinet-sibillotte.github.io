@@ -68,7 +68,7 @@ footer{border-top:1px solid var(--line);padding:20px 16px 36px;text-align:center
 
 <main class="wrap">
   <h2>Prendre rendez-vous</h2>
-  <p class="lead">Réservez un échange avec le cabinet pour présenter votre dossier. Les rendez-vous ont lieu le matin, du lundi au vendredi sauf le mercredi, sur demande confirmée par email. Horaires en heure de Paris.</p>
+  <p class="lead">Réservez un échange avec le cabinet pour présenter votre dossier, par téléphone de préférence, ou en visioconférence Zoom si le téléphone n'est pas possible. Les rendez-vous ont lieu le matin, du lundi au vendredi sauf le mercredi, sur demande confirmée par email. Horaires en heure de Paris.</p>
 
   <div class="closed" id="closed" hidden>
     <h3 style="margin:0 0 6px;font-family:var(--display);font-size:1.5rem">Les prises de rendez-vous sont closes</h3>
@@ -92,8 +92,14 @@ footer{border-top:1px solid var(--line);padding:20px 16px 36px;text-align:center
       <h3 id="t-vous">3. Vos coordonnées</h3>
       <div class="grid" style="margin-top:12px">
         <div><label for="nom">Nom et prénom</label><input id="nom" autocomplete="name" required></div>
-        <div><label for="cabinet">Cabinet</label><input id="cabinet" autocomplete="organization" required></div>
-        <div><label for="email">Email professionnel</label><input id="email" type="email" autocomplete="email" required></div>
+        <div><label for="cabinet">Cabinet ou entreprise <span class="hint">Facultatif</span></label><input id="cabinet" autocomplete="organization"></div>
+        <div><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
+        <div><label for="tel">Téléphone <span class="hint">Pour vous appeler au moment du rendez-vous</span></label><input id="tel" type="tel" autocomplete="tel" inputmode="tel" required></div>
+        <div><label for="mode">Mode d'échange</label>
+          <select id="mode" required>
+            <option value="Téléphone">Téléphone (recommandé)</option>
+            <option value="Visioconférence Zoom">Visioconférence Zoom, si le téléphone n'est pas possible</option>
+          </select></div>
         <div><label for="nature">Nature de la demande</label>
           <select id="nature" required>
             <option value="">Choisir…</option>
@@ -164,18 +170,18 @@ render();
 
 $('form').addEventListener('submit', e=>{
   e.preventDefault();
-  const f={nom:$('nom').value.trim(), cabinet:$('cabinet').value.trim(), email:$('email').value.trim(), nature:$('nature').value, message:$('message').value.trim()};
+  const f={nom:$('nom').value.trim(), cabinet:$('cabinet').value.trim(), email:$('email').value.trim(), tel:$('tel').value.trim(), mode:$('mode').value, nature:$('nature').value, message:$('message').value.trim()};
   const err=$('err');
   let msg='';
   if(hour===null) msg='Choisissez un horaire.';
   else if(!f.nom) msg='Indiquez votre nom.';
-  else if(!f.cabinet) msg='Indiquez votre cabinet.';
   else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) msg='Indiquez une adresse email valide.';
+  else if(f.tel.replace(/[^0-9]/g,'').length<9) msg='Indiquez un numéro de téléphone valide.';
   else if(!f.nature) msg='Choisissez la nature de votre demande.';
   if(msg){ err.textContent=msg; err.hidden=false; return; }
   err.hidden=true;
   const creneau=`${fmtLong(day)}, ${hour} h – ${hour+1} h (heure de Paris)`;
-  const body=`Bonjour Madame Sibillotte,\n\nJe souhaite prendre rendez-vous avec vous.\n\nCréneau souhaité : ${creneau}\nNom : ${f.nom}\nCabinet : ${f.cabinet}\nEmail : ${f.email}\nNature de la demande : ${f.nature}`+(f.message?`\n\nDossier : ${f.message}`:'')+`\n\nCordialement,\n${f.nom}`;
+  const body=`Bonjour Madame Sibillotte,\n\nJe souhaite prendre rendez-vous avec vous.\n\nCréneau souhaité : ${creneau}\nMode d'échange : ${f.mode}\nNom : ${f.nom}`+(f.cabinet?`\nCabinet ou entreprise : ${f.cabinet}`:'')+`\nEmail : ${f.email}\nTéléphone : ${f.tel}\nNature de la demande : ${f.nature}`+(f.message?`\n\nDossier : ${f.message}`:'')+`\n\nCordialement,\n${f.nom}`;
   $('msg').value=body;
   $('recap').textContent=`Créneau demandé : ${creneau}`;
   const href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Demande de rendez-vous – '+fmtLong(day)+' '+hour+' h')+'&body='+encodeURIComponent(body);
