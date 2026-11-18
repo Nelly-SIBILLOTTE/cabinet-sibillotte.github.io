@@ -29,7 +29,7 @@ h2{font-family:var(--display);font-style:italic;font-weight:600;font-size:clamp(
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 20px;margin-bottom:20px}
 .card h3{margin:0 0 4px;font-family:var(--display);font-weight:600;font-size:1.5rem}
 .hint{display:block;font-style:italic;color:var(--muted);font-size:.9rem;font-weight:400}
-.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:12px}
 .slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
 .opt{min-height:48px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:500 1rem var(--body);cursor:pointer;padding:8px 10px}
 .opt:hover{border-color:var(--gold)}
@@ -68,7 +68,7 @@ footer{border-top:1px solid var(--line);padding:20px 16px 36px;text-align:center
 
 <main class="wrap">
   <h2>Prendre rendez-vous</h2>
-  <p class="lead">Réservez un échange avec le cabinet pour présenter votre dossier. Les rendez-vous ont lieu le mercredi matin, sur demande confirmée par email. Horaires en heure de Paris.</p>
+  <p class="lead">Réservez un échange avec le cabinet pour présenter votre dossier. Les rendez-vous ont lieu le matin, du lundi au vendredi sauf le mercredi, sur demande confirmée par email. Horaires en heure de Paris.</p>
 
   <div class="closed" id="closed" hidden>
     <h3 style="margin:0 0 6px;font-family:var(--display);font-size:1.5rem">Les prises de rendez-vous sont closes</h3>
@@ -77,8 +77,8 @@ footer{border-top:1px solid var(--line);padding:20px 16px 36px;text-align:center
 
   <form id="form" novalidate>
     <section class="card" aria-labelledby="t-jour">
-      <h3 id="t-jour">1. Choisissez un mercredi</h3>
-      <span class="hint">Rendez-vous disponibles jusqu'au 18 décembre 2026</span>
+      <h3 id="t-jour">1. Choisissez un jour</h3>
+      <span class="hint">Lundi, mardi, jeudi ou vendredi, jusqu'au 18 décembre 2026. Pas de rendez-vous le mercredi.</span>
       <div class="days" id="days"></div>
     </section>
 
@@ -138,12 +138,12 @@ function parisNow(){
 const now = parisNow();
 const fmtLong = iso => { const [y,m,d]=iso.split('-').map(Number); return new Date(Date.UTC(y,m-1,d,12)).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'}); };
 
-// Mercredis à venir jusqu'à la date de fin, avec au moins un créneau encore ouvert
+// Jours ouvrés hors mercredi jusqu'à la date de fin, avec au moins un créneau encore ouvert
+const DAYS_OPEN=[1,2,4,5]; // lundi, mardi, jeudi, vendredi
 function wednesdays(){
   const out=[]; const [y,m,d]=now.date.split('-').map(Number);
   const t=new Date(Date.UTC(y,m-1,d,12));
-  while(t.getUTCDay()!==3) t.setUTCDate(t.getUTCDate()+1);
-  for(;;){ const iso=t.toISOString().slice(0,10); if(iso>END) break; if(openHours(iso).length) out.push(iso); t.setUTCDate(t.getUTCDate()+7); }
+  for(;;){ const iso=t.toISOString().slice(0,10); if(iso>END) break; if(DAYS_OPEN.includes(t.getUTCDay()) && openHours(iso).length) out.push(iso); t.setUTCDate(t.getUTCDate()+1); }
   return out;
 }
 // Un créneau du jour même reste ouvert jusqu'à une heure avant son début
